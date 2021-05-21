@@ -1,0 +1,2 @@
+include ':app'
+rootProject.name = "esiea-3A-mobile"
