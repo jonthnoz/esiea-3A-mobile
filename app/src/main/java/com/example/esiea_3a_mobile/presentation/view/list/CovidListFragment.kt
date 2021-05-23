@@ -5,12 +5,24 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
+import android.widget.TextView
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.whenStarted
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.esiea_3a_mobile.R
+import com.example.esiea_3a_mobile.data.api.CovidAPI
 import com.example.esiea_3a_mobile.data.model.CovidStat
 import com.example.esiea_3a_mobile.data.model.Source
 import com.example.esiea_3a_mobile.presentation.adapter.CovidListAdapter
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.Dispatcher
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -18,8 +30,8 @@ import com.example.esiea_3a_mobile.presentation.adapter.CovidListAdapter
 class CovidListFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
-    //private val adapter = CovidListAdapter(listOf())
-    //private val layoutManager = LinearLayoutManager(context)
+    private val adapter = CovidListAdapter(listOf())
+    private val layoutManager = LinearLayoutManager(context)
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -32,21 +44,35 @@ class CovidListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val test1 = CovidStat("Ain", 10, 40, 300, "date", Source("source"))
-        val test2 = CovidStat("Aisne", 11, 41, 301, "date", Source("source" ))
-        val test3 = CovidStat("Aisne3", 11, 41, 301, "date", Source("source" ))
-        val list = ArrayList<CovidStat>().apply {
-            add(test1)
-            add(test2)
-            add(test3)
+        viewLifecycleOwner.lifecycleScope.launch {
+            whenStarted {
+                recyclerView = view.findViewById(R.id.covid_stats_recyclerview)
+                val loadingView: ProgressBar = view.findViewById(R.id.covid_loader)
+                val errorView: TextView = view.findViewById(R.id.covid_list_error)
+                errorView.visibility = View.GONE
+
+                recyclerView.apply {
+                    adapter = this@CovidListFragment.adapter
+                    layoutManager = this@CovidListFragment.layoutManager
+                }
+
+                val retrofit: Retrofit = Retrofit.Builder()
+                    .baseUrl("https://coronavirusapi-france.now.sh/")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build()
+
+                val covidApi: CovidAPI = retrofit.create(CovidAPI::class.java)
+
+                val response = withContext(Dispatchers.IO) {
+                    covidApi.getCovidListFromApi()
+                }
+
+                loadingView.visibility = View.GONE
+
+                adapter.updateList(response.allLiveFranceData)
+            }
         }
 
-        this.recyclerView = view.findViewById(R.id.covid_stats_recyclerview)
-
-        this.recyclerView.apply {
-            adapter = CovidListAdapter(list) //this@CovidListFragment.adapter
-            layoutManager = LinearLayoutManager(context)//this@CovidListFragment.layoutManager
-        }
 
 
         /*view.findViewById<Button>(R.id.button_first).setOnClickListener {

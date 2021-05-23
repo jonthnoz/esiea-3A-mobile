@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.esiea_3a_mobile.R
 import com.example.esiea_3a_mobile.data.model.CovidStat
 
-class CovidListAdapter (private val dataSet: List<CovidStat>) :
+class CovidListAdapter (private var dataSet: List<CovidStat>) :
         RecyclerView.Adapter<CovidListAdapter.ViewHolder>() {
 
         /**
@@ -53,5 +53,10 @@ class CovidListAdapter (private val dataSet: List<CovidStat>) :
 
         // Return the size of your dataset (invoked by the layout manager)
         override fun getItemCount() = dataSet.size
+
+        fun updateList(newList: List<CovidStat>) {
+            dataSet = newList
+            notifyDataSetChanged()
+        }
 
 }
