@@ -7,20 +7,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.whenStarted
+import androidx.navigation.fragment.NavHostFragment.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.esiea_3a_mobile.R
 import com.example.esiea_3a_mobile.data.api.CovidAPI
 import com.example.esiea_3a_mobile.data.model.CovidStat
-import com.example.esiea_3a_mobile.data.model.Source
 import com.example.esiea_3a_mobile.presentation.adapter.CovidListAdapter
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import okhttp3.Dispatcher
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -30,7 +27,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class CovidListFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
-    private val adapter = CovidListAdapter(listOf())
+    private val adapter = CovidListAdapter(listOf(), ::onClickedRegion)
     private val layoutManager = LinearLayoutManager(context)
 
     override fun onCreateView(
@@ -63,21 +60,24 @@ class CovidListFragment : Fragment() {
 
                 val covidApi: CovidAPI = retrofit.create(CovidAPI::class.java)
 
-                val response = withContext(Dispatchers.IO) {
-                    covidApi.getCovidListFromApi()
-                }
+                val response = covidApi.getCovidListFromApi()
 
                 loadingView.visibility = View.GONE
 
-                adapter.updateList(response.allLiveFranceData)
+                val list: ArrayList<CovidStat> = response.allLiveFranceData as ArrayList<CovidStat>
+                list.add(0, list.removeAt(101))
+
+                adapter.updateList(list)
             }
         }
-
-
 
         /*view.findViewById<Button>(R.id.button_first).setOnClickListener {
             findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
         }*/
+    }
+
+    private fun onClickedRegion(item: CovidStat) {
+        findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
     }
 }
 

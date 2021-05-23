@@ -7,8 +7,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.esiea_3a_mobile.R
 import com.example.esiea_3a_mobile.data.model.CovidStat
+import javax.xml.transform.ErrorListener
 
-class CovidListAdapter (private var dataSet: List<CovidStat>) :
+class CovidListAdapter (private var dataSet: List<CovidStat>, var listener: ((CovidStat) -> Unit)? = null) :
         RecyclerView.Adapter<CovidListAdapter.ViewHolder>() {
 
         /**
@@ -43,12 +44,15 @@ class CovidListAdapter (private var dataSet: List<CovidStat>) :
         // Replace the contents of a view (invoked by the layout manager)
         override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
 
+            viewHolder.itemView.setOnClickListener {
+                listener?.invoke(dataSet[position])
+            }
             // Get element from your dataset at this position and replace the
             // contents of the view with that element
             viewHolder.textView_nom.text = dataSet[position].nom
-            viewHolder.textView_deces.text = dataSet[position].deces.toString()
-            viewHolder.textView_reanimation.text = dataSet[position].reanimation.toString()
-            viewHolder.textView_gueris.text = dataSet[position].gueris.toString()
+            viewHolder.textView_deces.text = "décès: " + dataSet[position].deces.toString()
+            viewHolder.textView_reanimation.text = "réanimations: " + dataSet[position].reanimation.toString()
+            viewHolder.textView_gueris.text = "guéris: " + dataSet[position].gueris.toString()
         }
 
         // Return the size of your dataset (invoked by the layout manager)
