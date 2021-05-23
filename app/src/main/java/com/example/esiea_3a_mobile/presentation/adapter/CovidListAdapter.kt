@@ -43,10 +43,12 @@ class CovidListAdapter (private var dataSet: List<CovidStat>, var listener: ((Co
 
         // Replace the contents of a view (invoked by the layout manager)
         override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-
+            // Get element from your dataset at this position and
+            // add onclicklistener on it
             viewHolder.itemView.setOnClickListener {
                 listener?.invoke(dataSet[position])
             }
+
             // Get element from your dataset at this position and replace the
             // contents of the view with that element
             viewHolder.textView_nom.text = dataSet[position].nom
