@@ -37,9 +37,7 @@ class CovidListAdapter (private val dataSet: List<CovidStat>) :
             val view = LayoutInflater.from(viewGroup.context)
                 .inflate(R.layout.region_stats_item, viewGroup, false)
 
-            return ViewHolder(
-                view
-            )
+            return ViewHolder(view)
         }
 
         // Replace the contents of a view (invoked by the layout manager)

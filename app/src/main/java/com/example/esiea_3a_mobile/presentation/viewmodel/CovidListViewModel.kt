@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.esiea_3a_mobile.data.model.CovidStat
 
-class CovidListViewModel: ViewModel(){
+ class CovidListViewModel(): ViewModel(){
 
     private val covidList: MutableLiveData<List<CovidStat>> by lazy {
         MutableLiveData<List<CovidStat>>().also {
