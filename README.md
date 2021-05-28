@@ -1,6 +1,6 @@
 # esiea-3A-mobile 
 
-## Android application project in kotlin diplaying daily Covid data of the French regions and departements from [CoronavirusAPI-France](https://github.com/florianzemma/CoronavirusAPI-France)
+## Android application project in kotlin displaying daily Covid data of the French regions and departements from [CoronavirusAPI-France](https://github.com/florianzemma/CoronavirusAPI-France)
 ### Run with *Android Studio* (apk available soon)  
 
   
