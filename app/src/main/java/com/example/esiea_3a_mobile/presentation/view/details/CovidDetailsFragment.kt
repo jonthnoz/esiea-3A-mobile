@@ -12,6 +12,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.esiea_3a_mobile.R
+import com.example.esiea_3a_mobile.data.model.CovidStat
 import com.example.esiea_3a_mobile.presentation.viewmodel.CovidListViewModel
 import com.squareup.picasso.Picasso
 
@@ -42,13 +43,13 @@ class CovidDetailsFragment() : Fragment() {
     }
 
     private fun initElements(view: View) {
-        val region = args.item
-        var newId = 0
-        if (args.place < 20) {
-            newId = args.place
-        }
-        else if (args.place < 94){
-            newId = args.place + 1
+        val region: CovidStat = args.item
+        var newId: Int = region.initialPosition!!
+        if (newId < 94) {
+            newId += 1
+        } else { newId = 0 }
+        if (newId < 20){
+            newId -= 1
         }
         val twRea = view.findViewById<TextView>(R.id.textview_detail_reanimation)
         val twNom = view.findViewById<TextView>(R.id.textview_detail_nom)

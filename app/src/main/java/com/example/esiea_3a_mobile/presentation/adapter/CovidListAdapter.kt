@@ -4,10 +4,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
+import android.widget.CompoundButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.esiea_3a_mobile.R
 import com.example.esiea_3a_mobile.data.model.CovidStat
+import com.example.esiea_3a_mobile.presentation.view.details.CovidDetailsFragmentArgs
 import javax.xml.transform.ErrorListener
 
 class CovidListAdapter (var dataSet: List<CovidStat>, var listener: ((CovidStat, Int) -> Unit)? = null) :
@@ -53,8 +55,55 @@ class CovidListAdapter (var dataSet: List<CovidStat>, var listener: ((CovidStat,
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
         viewHolder.textView_nom.text = dataSet[position].nom
+
+        dataSet[position].favoris = dataSet[position].favoris ?:false
+        viewHolder.checkBox_fav.isChecked = dataSet[position].favoris!!
+        dataSet[position].initialPosition = dataSet[position].initialPosition ?:position
+
+        viewHolder.checkBox_fav.setOnClickListener {
+            var list: ArrayList<CovidStat> = dataSet as ArrayList<CovidStat>
+
+            if (it is CheckBox && !it.isChecked) {
+                list = delFav(dataSet, position)
+            }
+            else {
+                list = addFav(dataSet, position)
+            }
+            updateList(list)
+        }
     }
 
     // Return the size of your dataset (invoked by the layout manager)
     override fun getItemCount() = dataSet.size
+
+
+    private fun delFav(dataSet: List<CovidStat>, position: Int): ArrayList<CovidStat> {
+        val list: ArrayList<CovidStat> = dataSet as ArrayList<CovidStat>
+
+        dataSet[position].favoris = false
+
+        list.add(dataSet[position].initialPosition!!+nbFav(dataSet), list.removeAt(position))
+
+        return list
+    }
+
+    private fun addFav(dataSet: List<CovidStat>, position: Int): ArrayList<CovidStat> {
+        val list: ArrayList<CovidStat> = dataSet as ArrayList<CovidStat>
+
+        dataSet[position].favoris = true
+
+        list.add(0, list.removeAt(position))
+
+        return list
+    }
+
+    private fun nbFav(list: List<CovidStat>): Int {
+        var total = 0
+
+        for (region: CovidStat in list) {
+            total += if (region.favoris == true) 1 else 0
+        }
+        return total
+    }
 }
+
