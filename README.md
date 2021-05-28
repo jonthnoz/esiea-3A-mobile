@@ -6,7 +6,7 @@
   
 Architecure follows **MVVM** model as Google recommendation.
 Using **Retrofit2** to make api calls and **Room database** for data persitence, both interfaces wrapped in a *repository*. 
-A recycler view diplays the first list with an add to favourite feature to keep some rows on top.  
+A *recycler view* diplays the first list with an add to favourite feature to keep some rows on top.  
 
 ___
 Scheduled features:
