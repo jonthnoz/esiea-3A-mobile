@@ -7,6 +7,6 @@
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 
-    <string name="error_list_display">Oups, une erreur s\'est produite</string>
+    <string name="error_list_display">Oups, une erreur s\'est produite\nRéessayer</string>
     <string name="retour">retour</string>
 </resources>

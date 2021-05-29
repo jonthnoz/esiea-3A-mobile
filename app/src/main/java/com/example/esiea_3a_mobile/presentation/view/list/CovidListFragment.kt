@@ -1,15 +1,14 @@
 package com.example.esiea_3a_mobile.presentation.view.list
 
+import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -36,9 +35,17 @@ class CovidListFragment: Fragment() {
         return inflater.inflate(R.layout.fragment_region_list, container, false)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        view.findViewById<Button>(R.id.covid_list_error).setOnClickListener {
+            it.visibility = View.GONE
+            viewModel.reloadList()
+        }
+
+        val loadingView = view.findViewById<ProgressBar>(R.id.covid_loader)
+        val errorTextView = view.findViewById<TextView>(R.id.covid_list_error)
         val recyclerView = view.findViewById<RecyclerView>(R.id.covid_stats_recyclerview)
         recyclerView.addItemDecoration(DividerItemDecoration(activity, DividerItemDecoration.VERTICAL))
 
@@ -48,10 +55,7 @@ class CovidListFragment: Fragment() {
             layoutManager = LinearLayoutManager(context)
         }
 
-        viewModel.getList().observe(viewLifecycleOwner, Observer {
-            val loadingView = view.findViewById<ProgressBar>(R.id.covid_loader)
-            val errorTextView = view.findViewById<TextView>(R.id.covid_list_error)
-
+        viewModel.getList().observe(viewLifecycleOwner, {
             when(it.status) {
                 Status.SUCCESS -> {
                     loadingView.visibility = View.GONE
@@ -64,17 +68,21 @@ class CovidListFragment: Fragment() {
                 }
                 Status.ERROR -> {
                     loadingView.visibility = View.GONE
-                    Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+                    errorTextView.visibility = View.VISIBLE
+                    Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
                 }
 
             }
         })
+
+        viewModel.reloadList()
     }
 
     private fun onClickedRegion(item: CovidStat, place: Int) {
-        val action = CovidListFragmentDirections.actionNavigateToStats( place, item)
+        val action = CovidListFragmentDirections.actionNavigateToStats(place, item)
         findNavController().navigate(action)
     }
+
 }
 
 

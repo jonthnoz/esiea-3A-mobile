@@ -1,39 +1,27 @@
 package com.example.esiea_3a_mobile.presentation.viewmodel
 
+import android.app.Application
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.*
-import com.example.esiea_3a_mobile.data.api.ApiInstance
-import com.example.esiea_3a_mobile.data.api.CovidAPI
 import com.example.esiea_3a_mobile.data.model.CovidStat
+import com.example.esiea_3a_mobile.data.repository.CovidRepository
 import com.example.esiea_3a_mobile.presentation.view.list.CovidListModel
 import kotlinx.coroutines.launch
 
-class CovidListViewModel(): ViewModel(){
 
-    private val covidList: MutableLiveData<CovidListModel<List<CovidStat>>> by lazy {
-        MutableLiveData<CovidListModel<List<CovidStat>>>().also {
-            loadStats()
-        }
-    }
+class CovidListViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val covidRepository = CovidRepository.getRepository(getApplication<Application>().applicationContext)
 
     fun getList(): LiveData<CovidListModel<List<CovidStat>>> {
-        return covidList
+        return covidRepository.getStats()
     }
 
-    private fun loadStats() {
-        // Do an asynchronous operation to fetch users.
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun reloadList() {
         viewModelScope.launch {
-            covidList.postValue(CovidListModel.loading(null))
-            val covidApi: CovidAPI = ApiInstance.getCovidApi().create(CovidAPI::class.java)
-
-            val response = covidApi.getCovidListFromApi()
-            if (response == null) {
-                covidList.postValue(CovidListModel.error("Error loading data", null))
-            }
-            val list = response.allLiveFranceData as ArrayList<CovidStat>
-            list.add(0, list.removeAt(101))
-
-            covidList.postValue(CovidListModel.success(list))
+            covidRepository.refreshStats()
         }
     }
-
 }
