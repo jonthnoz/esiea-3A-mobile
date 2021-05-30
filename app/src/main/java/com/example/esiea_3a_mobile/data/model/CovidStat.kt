@@ -23,5 +23,7 @@ data class CovidStat(
     var date: String,
     @Embedded
     val source: Source,
+    var initialPosition: Int?,
+    var favoris: Boolean?
 ): Parcelable
 

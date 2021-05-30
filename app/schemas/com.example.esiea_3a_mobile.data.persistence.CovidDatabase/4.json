@@ -1,12 +1,12 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 1,
-    "identityHash": "4857b1575a362d13f2724c56b200d878",
+    "version": 4,
+    "identityHash": "c6a788c423d90bbe772f61f5b7be3db8",
     "entities": [
       {
         "tableName": "regions",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`nom` TEXT NOT NULL, `deces` INTEGER NOT NULL, `gueris` INTEGER NOT NULL, `reanimation` INTEGER NOT NULL, `hospitalises` INTEGER NOT NULL, `date` TEXT NOT NULL, `oldPosition` INTEGER, `sourceNom` TEXT NOT NULL, PRIMARY KEY(`nom`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`nom` TEXT NOT NULL, `deces` INTEGER NOT NULL, `gueris` INTEGER NOT NULL, `reanimation` INTEGER NOT NULL, `hospitalises` INTEGER NOT NULL, `date` TEXT NOT NULL, `initialPosition` INTEGER, `favoris` INTEGER, `sourceNom` TEXT NOT NULL, PRIMARY KEY(`nom`))",
         "fields": [
           {
             "fieldPath": "nom",
@@ -45,8 +45,14 @@
             "notNull": true
           },
           {
-            "fieldPath": "oldPosition",
-            "columnName": "oldPosition",
+            "fieldPath": "initialPosition",
+            "columnName": "initialPosition",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "favoris",
+            "columnName": "favoris",
             "affinity": "INTEGER",
             "notNull": false
           },
@@ -70,7 +76,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '4857b1575a362d13f2724c56b200d878')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c6a788c423d90bbe772f61f5b7be3db8')"
     ]
   }
 }

@@ -39,11 +39,6 @@ class CovidListFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        view.findViewById<Button>(R.id.covid_list_error).setOnClickListener {
-            it.visibility = View.GONE
-            viewModel.reloadList()
-        }
-
         val loadingView = view.findViewById<ProgressBar>(R.id.covid_loader)
         val errorTextView = view.findViewById<TextView>(R.id.covid_list_error)
         val recyclerView = view.findViewById<RecyclerView>(R.id.covid_stats_recyclerview)
@@ -53,6 +48,10 @@ class CovidListFragment: Fragment() {
         recyclerView.apply {
             adapter = this@CovidListFragment.adapter
             layoutManager = LinearLayoutManager(context)
+        }
+
+        view.findViewById<Button>(R.id.covid_list_error).setOnClickListener {
+            viewModel.reloadList()
         }
 
         viewModel.getList().observe(viewLifecycleOwner, {
@@ -82,7 +81,6 @@ class CovidListFragment: Fragment() {
         val action = CovidListFragmentDirections.actionNavigateToStats(place, item)
         findNavController().navigate(action)
     }
-
 }
 
 

@@ -80,12 +80,12 @@ class CovidRepository (context: Context) {
     @RequiresApi(Build.VERSION_CODES.O)
     private suspend fun shouldFetch(): Boolean {
 
-
         val network = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
         if (network == null || !network.hasCapability(NET_CAPABILITY_VALIDATED)){
             resourceStatus.postValue(CovidListModel.error("Pas d'accès internet", null))
             return false
         }
+
         if (resourceStatus.value==null) {
             return true
         }
