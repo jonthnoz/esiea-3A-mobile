@@ -5,7 +5,7 @@
 
   
 Architecure follows **MVVM** model as Google recommendation.
-Using **Retrofit2** to make api calls and **Room database** for data persitence, both interfaces wrapped in a *repository*. 
+Using **Retrofit2** to make api calls and **Room database** for data persitence, both interfaces wrapped in a *repository* to properly handle the data source and validity. 
 A *recycler view* diplays the first list with an add to favourite feature to keep some rows on top.
 **SOLID** principles are followed thanks to *Singletons*, *Adapter*, and design patterns implementation.  
 Additional librairies: **Picasso** to load images and **Gson** to parse the api response. Date and Time manipulation.
